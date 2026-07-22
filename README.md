@@ -1,101 +1,140 @@
 # CrewPlan Lite
 
-Edukacyjny projekt rekrutacyjny: uproszczony system harmonogramowania ekip wykonujacych prace infrastrukturalne.
+CrewPlan Lite to edukacyjny projekt rekrutacyjny pokazujący uproszczony system harmonogramowania ekip wykonujących prace infrastrukturalne.
 
-Projekt jest rozwijany etapami. Na starcie repo zawiera minimalny szkielet:
+## Cel projektu
 
-- `apps/api` - backend FastAPI
-- `apps/web` - frontend Next.js z App Router
-- `docker-compose.yml` - lokalny PostgreSQL
+Celem projektu jest nauka budowania czytelnego modularnego monolitu z backendem API, frontendem webowym, relacyjną bazą danych i solverem optymalizacyjnym. MVP ma docelowo pozwalać zobaczyć przykładowy projekt, zadania, ekipy, wymagane kwalifikacje, zależności oraz wynik optymalizacji harmonogramu.
 
-## Wymagania lokalne
+## Technologie
 
-- Python 3.12+
-- Node.js 20+
-- Docker Desktop albo zgodny Docker Engine
+Backend:
 
-## Uruchomienie bazy danych
+- Python
+- FastAPI
+- SQLAlchemy
+- Alembic
+- PostgreSQL
+- OR-Tools CP-SAT
+- pytest
 
-```bash
-docker compose up -d postgres
+Frontend:
+
+- Next.js
+- React
+- TypeScript
+- App Router
+
+Infrastruktura:
+
+- Docker
+- Docker Compose
+
+## Struktura repozytorium
+
+```text
+apps/
+  api/
+    app/
+      main.py
+    tests/
+    Dockerfile
+    requirements.txt
+  web/
+    app/
+    Dockerfile
+    package.json
+    tsconfig.json
+docker-compose.yml
+README.md
+AGENTS.md
 ```
 
-Sprawdzenie statusu kontenera:
+## Uruchomienie
+
+Cały aktualny szkielet aplikacji jest uruchamiany przez Docker Compose.
+
+```bash
+docker compose up --build
+```
+
+Po starcie usług:
+
+- frontend: `http://localhost:3000`
+- backend: `http://localhost:8000`
+- PostgreSQL: `localhost:5432`
+
+Jeżeli któryś port jest zajęty, można go nadpisać zmienną środowiskową. Przykład dla PowerShell:
+
+```powershell
+$env:API_PORT = "8010"
+docker compose up --build
+```
+
+W takim wariancie backend będzie dostępny pod adresem `http://localhost:8010`.
+
+Sprawdzenie statusu kontenerów:
 
 ```bash
 docker compose ps
 ```
 
-## Backend
-
-Pierwsze przygotowanie srodowiska:
+Zatrzymanie środowiska:
 
 ```bash
-cd apps/api
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+docker compose down
 ```
 
-Uruchomienie API:
+Usunięcie danych lokalnej bazy:
 
 ```bash
-cd apps/api
-.venv\Scripts\Activate.ps1
-uvicorn app.main:app --reload
+docker compose down -v
 ```
 
-Healthcheck:
+## Endpointy i funkcjonalności
 
-```bash
-curl http://localhost:8000/health
+Aktualnie dostępny jest podstawowy healthcheck API:
+
+```text
+GET /health
 ```
 
-Oczekiwana odpowiedz:
+Oczekiwana odpowiedź:
 
 ```json
 {"status":"ok","service":"crewplan-lite-api"}
 ```
 
-Testy backendu:
+Frontend pokazuje stronę startową CrewPlan Lite oraz aktualny status pierwszego etapu implementacji.
+
+## Testy
+
+Testy backendu można uruchomić w kontenerze API:
 
 ```bash
-cd apps/api
-.venv\Scripts\Activate.ps1
-pytest
+docker compose run --rm api pytest
 ```
 
-## Frontend
-
-Pierwsze przygotowanie zaleznosci:
+Sprawdzenie typów frontendu:
 
 ```bash
-cd apps/web
-npm install
+docker compose run --rm web npm run typecheck
 ```
 
-Uruchomienie aplikacji:
+Build frontendu:
 
 ```bash
-cd apps/web
-npm run dev
+docker compose run --rm web npm run build
 ```
 
-Frontend bedzie dostepny pod adresem:
+## Aktualny stan implementacji
 
-```text
-http://localhost:3000
-```
+Zaimplementowany jest etap 1:
 
-Sprawdzenie typow:
+- szkielet backendu FastAPI,
+- endpoint `GET /health`,
+- test backendu dla healthchecka,
+- szkielet frontendu Next.js App Router,
+- uruchamianie PostgreSQL, API i frontendu przez Docker Compose.
 
-```bash
-cd apps/web
-npm run typecheck
-```
-
-## Zasady pracy
-
-- Nie wykonujemy commitow automatycznie.
-- Kazdy etap powinien byc maly, czytelny i zakonczony testami.
-- Solver, model domenowy i migracje beda dodawane w kolejnych etapach.
+Model domenowy, migracje Alembic, seed danych demo, endpointy planistyczne i solver CP-SAT będą dodawane w kolejnych etapach.
