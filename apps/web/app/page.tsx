@@ -13,7 +13,7 @@ export default function HomePage() {
           <p className="eyebrow">CrewPlan Lite</p>
           <h1>Planowanie ekip infrastrukturalnych</h1>
           <p className="lead">
-            Minimalny szkielet aplikacji jest gotowy. Kolejne etapy dodadza
+            Minimalny szkielet aplikacji jest gotowy. Kolejne etapy dodadzą
             model domenowy, dane demo, solver oraz widok harmonogramu.
           </p>
         </div>
@@ -28,7 +28,7 @@ export default function HomePage() {
         <article>
           <span>Frontend</span>
           <strong>Next.js App Router</strong>
-          <p>Aplikacja webowa ma bazowy layout i strone startowa.</p>
+          <p>Aplikacja webowa ma bazowy layout i stronę startową.</p>
         </article>
         <article>
           <span>Infrastruktura</span>

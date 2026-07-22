@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "CrewPlan Lite",
-  description: "Educational crew scheduling project",
+  description: "Edukacyjny projekt harmonogramowania ekip",
 };
 
 type RootLayoutProps = {
