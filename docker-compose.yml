@@ -1,4 +1,27 @@
 services:
+  api:
+    build:
+      context: ./apps/api
+    container_name: crewplan-lite-api
+    environment:
+      DATABASE_URL: postgresql+psycopg://crewplan:crewplan@postgres:5432/crewplan_lite
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./apps/web
+    container_name: crewplan-lite-web
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:${API_PORT:-8000}
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    depends_on:
+      - api
+
   postgres:
     image: postgres:16-alpine
     container_name: crewplan-lite-postgres
@@ -7,7 +30,7 @@ services:
       POSTGRES_USER: crewplan
       POSTGRES_PASSWORD: crewplan
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
