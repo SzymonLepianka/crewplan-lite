@@ -35,8 +35,11 @@ Infrastruktura:
 ```text
 apps/
   api/
+    alembic/
     app/
       main.py
+      db/
+      modules/
     tests/
     Dockerfile
     requirements.txt
@@ -79,6 +82,12 @@ Sprawdzenie statusu kontenerów:
 docker compose ps
 ```
 
+Uruchomienie migracji bazy danych:
+
+```bash
+docker compose run --rm api alembic upgrade head
+```
+
 Zatrzymanie środowiska:
 
 ```bash
@@ -112,6 +121,7 @@ Frontend pokazuje stronę startową CrewPlan Lite oraz aktualny status pierwszeg
 Testy backendu można uruchomić w kontenerze API:
 
 ```bash
+docker compose run --rm api alembic upgrade head
 docker compose run --rm api pytest
 ```
 
@@ -129,12 +139,15 @@ docker compose run --rm web npm run build
 
 ## Aktualny stan implementacji
 
-Zaimplementowany jest etap 1:
+Zaimplementowane są etapy 1 i 2:
 
 - szkielet backendu FastAPI,
 - endpoint `GET /health`,
 - test backendu dla healthchecka,
 - szkielet frontendu Next.js App Router,
-- uruchamianie PostgreSQL, API i frontendu przez Docker Compose.
+- uruchamianie PostgreSQL, API i frontendu przez Docker Compose,
+- konfiguracja SQLAlchemy,
+- migracje Alembic,
+- schemat bazy danych dla domeny planowania.
 
-Model domenowy, migracje Alembic, seed danych demo, endpointy planistyczne i solver CP-SAT będą dodawane w kolejnych etapach.
+Seed danych demo, endpointy planistyczne i solver CP-SAT będą dodawane w kolejnych etapach.
