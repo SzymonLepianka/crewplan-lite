@@ -105,7 +105,11 @@ class Crew(Base):
 
     project: Mapped[Project] = relationship(back_populates="crews")
     skills: Mapped[list["CrewSkill"]] = relationship(back_populates="crew", cascade="all, delete-orphan")
-    availability: Mapped["CrewAvailability | None"] = relationship(back_populates="crew", cascade="all, delete-orphan")
+    availability: Mapped["CrewAvailability | None"] = relationship(
+        back_populates="crew",
+        cascade="all, delete-orphan",
+        uselist=False,
+    )
     planning_locks: Mapped[list["PlanningLock"]] = relationship(back_populates="locked_crew")
     assignments: Mapped[list["TaskAssignment"]] = relationship(back_populates="crew")
 

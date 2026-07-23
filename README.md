@@ -88,6 +88,12 @@ Uruchomienie migracji bazy danych:
 docker compose run --rm api alembic upgrade head
 ```
 
+Dodanie przykładowych danych demo:
+
+```bash
+docker compose run --rm api python -m app.seed.demo_data
+```
+
 Zatrzymanie środowiska:
 
 ```bash
@@ -102,13 +108,16 @@ docker compose down -v
 
 ## Endpointy i funkcjonalności
 
-Aktualnie dostępny jest podstawowy healthcheck API:
+Aktualnie dostępne są:
 
 ```text
 GET /health
+GET /api/projects
+GET /api/projects/{project_id}
+GET /api/projects/{project_id}/planning-data
 ```
 
-Oczekiwana odpowiedź:
+Oczekiwana odpowiedź z `/health`:
 
 ```json
 {"status":"ok","service":"crewplan-lite-api"}
@@ -116,12 +125,15 @@ Oczekiwana odpowiedź:
 
 Frontend pokazuje stronę startową CrewPlan Lite oraz aktualny status pierwszego etapu implementacji.
 
+Endpoint `/api/projects/{project_id}/planning-data` zwraca dane wejściowe do późniejszego solvera: projekt, zadania, kwalifikacje, ekipy, dostępności, zależności i aktywne blokady planistyczne.
+
 ## Testy
 
 Testy backendu można uruchomić w kontenerze API:
 
 ```bash
 docker compose run --rm api alembic upgrade head
+docker compose run --rm api python -m app.seed.demo_data
 docker compose run --rm api pytest
 ```
 
@@ -139,7 +151,7 @@ docker compose run --rm web npm run build
 
 ## Aktualny stan implementacji
 
-Zaimplementowane są etapy 1 i 2:
+Zaimplementowane są etapy 1, 2 i 3:
 
 - szkielet backendu FastAPI,
 - endpoint `GET /health`,
@@ -148,6 +160,8 @@ Zaimplementowane są etapy 1 i 2:
 - uruchamianie PostgreSQL, API i frontendu przez Docker Compose,
 - konfiguracja SQLAlchemy,
 - migracje Alembic,
-- schemat bazy danych dla domeny planowania.
+- schemat bazy danych dla domeny planowania,
+- seed przykładowego projektu demo,
+- endpointy odczytu projektu i danych planistycznych.
 
-Seed danych demo, endpointy planistyczne i solver CP-SAT będą dodawane w kolejnych etapach.
+Solver CP-SAT, zapisywanie uruchomień harmonogramu i widok harmonogramu w frontendzie będą dodawane w kolejnych etapach.
