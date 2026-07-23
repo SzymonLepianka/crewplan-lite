@@ -115,6 +115,9 @@ GET /health
 GET /api/projects
 GET /api/projects/{project_id}
 GET /api/projects/{project_id}/planning-data
+POST /api/projects/{project_id}/schedule-runs
+GET /api/projects/{project_id}/schedule-runs/latest
+GET /api/projects/{project_id}/schedule-runs/{run_id}
 ```
 
 Oczekiwana odpowiedź z `/health`:
@@ -126,6 +129,8 @@ Oczekiwana odpowiedź z `/health`:
 Frontend pokazuje stronę startową CrewPlan Lite oraz aktualny status pierwszego etapu implementacji.
 
 Endpoint `/api/projects/{project_id}/planning-data` zwraca dane wejściowe do późniejszego solvera: projekt, zadania, kwalifikacje, ekipy, dostępności, zależności i aktywne blokady planistyczne.
+
+Endpoint `POST /api/projects/{project_id}/schedule-runs` uruchamia solver synchronicznie i zapisuje wynik w tabelach `schedule_runs` oraz `task_assignments`.
 
 ## Testy
 
@@ -151,7 +156,7 @@ docker compose run --rm web npm run build
 
 ## Aktualny stan implementacji
 
-Zaimplementowane są etapy 1, 2, 3 i 4:
+Zaimplementowane są etapy 1, 2, 3, 4 i 5:
 
 - szkielet backendu FastAPI,
 - endpoint `GET /health`,
@@ -163,6 +168,7 @@ Zaimplementowane są etapy 1, 2, 3 i 4:
 - schemat bazy danych dla domeny planowania,
 - seed przykładowego projektu demo,
 - endpointy odczytu projektu i danych planistycznych,
-- czysta warstwa solvera CP-SAT dla harmonogramowania zadań.
+- czysta warstwa solvera CP-SAT dla harmonogramowania zadań,
+- endpoint uruchamiający solver i zapisujący wynik harmonogramu.
 
-Zapisywanie uruchomień harmonogramu, endpoint uruchamiający solver i widok harmonogramu w frontendzie będą dodawane w kolejnych etapach.
+Widok harmonogramu w frontendzie będzie dodawany w kolejnym etapie.

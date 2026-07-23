@@ -21,3 +21,18 @@ def get_project(project_id: int, session: Session = Depends(get_session)) -> sch
 @router.get("/{project_id}/planning-data", response_model=schemas.PlanningDataRead)
 def get_planning_data(project_id: int, session: Session = Depends(get_session)) -> schemas.PlanningDataRead:
     return service.get_planning_data(session, project_id)
+
+
+@router.post("/{project_id}/schedule-runs", response_model=schemas.ScheduleRunRead, status_code=201)
+def create_schedule_run(project_id: int, session: Session = Depends(get_session)) -> schemas.ScheduleRunRead:
+    return service.create_schedule_run(session, project_id)
+
+
+@router.get("/{project_id}/schedule-runs/latest", response_model=schemas.ScheduleRunRead)
+def get_latest_schedule_run(project_id: int, session: Session = Depends(get_session)) -> schemas.ScheduleRunRead:
+    return service.get_latest_schedule_run(session, project_id)
+
+
+@router.get("/{project_id}/schedule-runs/{run_id}", response_model=schemas.ScheduleRunRead)
+def get_schedule_run(project_id: int, run_id: int, session: Session = Depends(get_session)) -> schemas.ScheduleRunRead:
+    return service.get_schedule_run(session, project_id, run_id)

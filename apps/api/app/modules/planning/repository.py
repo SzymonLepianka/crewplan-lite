@@ -48,3 +48,45 @@ def list_project_dependencies(session: Session, project_id: int) -> list[models.
 def list_skills(session: Session) -> list[models.Skill]:
     statement = select(models.Skill).order_by(models.Skill.code)
     return list(session.scalars(statement))
+
+
+def save_schedule_run(
+    session: Session,
+    schedule_run: models.ScheduleRun,
+    assignments: list[models.TaskAssignment],
+) -> models.ScheduleRun:
+    session.add(schedule_run)
+    session.flush()
+
+    for assignment in assignments:
+        assignment.schedule_run_id = schedule_run.id
+
+    session.add_all(assignments)
+    session.commit()
+    return get_schedule_run(session, schedule_run.project_id, schedule_run.id) or schedule_run
+
+
+def get_schedule_run(session: Session, project_id: int, run_id: int) -> models.ScheduleRun | None:
+    statement = (
+        select(models.ScheduleRun)
+        .where(models.ScheduleRun.project_id == project_id, models.ScheduleRun.id == run_id)
+        .options(
+            selectinload(models.ScheduleRun.assignments).selectinload(models.TaskAssignment.task),
+            selectinload(models.ScheduleRun.assignments).selectinload(models.TaskAssignment.crew),
+        )
+    )
+    return session.scalars(statement).one_or_none()
+
+
+def get_latest_schedule_run(session: Session, project_id: int) -> models.ScheduleRun | None:
+    statement = (
+        select(models.ScheduleRun)
+        .where(models.ScheduleRun.project_id == project_id)
+        .order_by(models.ScheduleRun.id.desc())
+        .limit(1)
+        .options(
+            selectinload(models.ScheduleRun.assignments).selectinload(models.TaskAssignment.task),
+            selectinload(models.ScheduleRun.assignments).selectinload(models.TaskAssignment.crew),
+        )
+    )
+    return session.scalars(statement).one_or_none()

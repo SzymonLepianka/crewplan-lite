@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict
 
@@ -59,3 +59,25 @@ class PlanningDataRead(BaseModel):
     dependencies: list[TaskDependencyRead]
     crews: list[CrewRead]
     planning_locks: list[PlanningLockRead]
+
+
+class TaskAssignmentRead(BaseModel):
+    id: int
+    task_code: str
+    crew_code: str
+    start_day: int
+    end_day: int
+    lateness_days: int
+
+
+class ScheduleRunRead(BaseModel):
+    id: int
+    project_id: int
+    status: str
+    started_at: datetime
+    finished_at: datetime | None
+    runtime_ms: int | None
+    objective_value: int | None
+    total_lateness_days: int | None
+    project_finish_day: int | None
+    assignments: list[TaskAssignmentRead]
