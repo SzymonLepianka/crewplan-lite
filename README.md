@@ -151,7 +151,7 @@ docker compose run --rm web npm run build
 
 ## Aktualny stan implementacji
 
-Zaimplementowane są etapy 1, 2 i 3:
+Zaimplementowane są etapy 1, 2, 3 i 4:
 
 - szkielet backendu FastAPI,
 - endpoint `GET /health`,
@@ -162,6 +162,7 @@ Zaimplementowane są etapy 1, 2 i 3:
 - migracje Alembic,
 - schemat bazy danych dla domeny planowania,
 - seed przykładowego projektu demo,
-- endpointy odczytu projektu i danych planistycznych.
+- endpointy odczytu projektu i danych planistycznych,
+- czysta warstwa solvera CP-SAT dla harmonogramowania zadań.
 
-Solver CP-SAT, zapisywanie uruchomień harmonogramu i widok harmonogramu w frontendzie będą dodawane w kolejnych etapach.
+Zapisywanie uruchomień harmonogramu, endpoint uruchamiający solver i widok harmonogramu w frontendzie będą dodawane w kolejnych etapach.
