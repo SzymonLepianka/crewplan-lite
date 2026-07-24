@@ -45,6 +45,8 @@ apps/
     requirements.txt
   web/
     app/
+    components/
+    lib/
     Dockerfile
     package.json
     tsconfig.json
@@ -71,10 +73,11 @@ Jeżeli któryś port jest zajęty, można go nadpisać zmienną środowiskową.
 
 ```powershell
 $env:API_PORT = "8010"
+$env:WEB_PORT = "3010"
 docker compose up --build
 ```
 
-W takim wariancie backend będzie dostępny pod adresem `http://localhost:8010`.
+W takim wariancie backend będzie dostępny pod adresem `http://localhost:8010`, a frontend pod adresem `http://localhost:3010`.
 
 Sprawdzenie statusu kontenerów:
 
@@ -126,7 +129,7 @@ Oczekiwana odpowiedź z `/health`:
 {"status":"ok","service":"crewplan-lite-api"}
 ```
 
-Frontend pokazuje stronę startową CrewPlan Lite oraz aktualny status pierwszego etapu implementacji.
+Frontend pokazuje dane projektu demo, listę zadań, listę ekip, kwalifikacje, zależności, metryki wyniku solvera oraz zapisany harmonogram. Przycisk `Uruchom optymalizację` wywołuje backendowy solver i odświeża wynik na ekranie.
 
 Endpoint `/api/projects/{project_id}/planning-data` zwraca dane wejściowe do późniejszego solvera: projekt, zadania, kwalifikacje, ekipy, dostępności, zależności i aktywne blokady planistyczne.
 
@@ -156,7 +159,7 @@ docker compose run --rm web npm run build
 
 ## Aktualny stan implementacji
 
-Zaimplementowane są etapy 1, 2, 3, 4 i 5:
+Zaimplementowane są etapy 1, 2, 3, 4, 5 i 6:
 
 - szkielet backendu FastAPI,
 - endpoint `GET /health`,
@@ -169,6 +172,7 @@ Zaimplementowane są etapy 1, 2, 3, 4 i 5:
 - seed przykładowego projektu demo,
 - endpointy odczytu projektu i danych planistycznych,
 - czysta warstwa solvera CP-SAT dla harmonogramowania zadań,
-- endpoint uruchamiający solver i zapisujący wynik harmonogramu.
+- endpoint uruchamiający solver i zapisujący wynik harmonogramu,
+- frontend MVP pokazujący dane projektu i harmonogram oraz uruchamiający optymalizację.
 
-Widok harmonogramu w frontendzie będzie dodawany w kolejnym etapie.
+Obsługa ręcznych blokad planistycznych będzie dodawana w późniejszym etapie.

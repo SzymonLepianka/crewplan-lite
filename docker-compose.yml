@@ -5,6 +5,7 @@ services:
     container_name: crewplan-lite-api
     environment:
       DATABASE_URL: postgresql+psycopg://crewplan:crewplan@postgres:5432/crewplan_lite
+      FRONTEND_ORIGINS: ${FRONTEND_ORIGINS:-http://localhost:${WEB_PORT:-3000},http://127.0.0.1:${WEB_PORT:-3000}}
     ports:
       - "${API_PORT:-8000}:8000"
     depends_on:
